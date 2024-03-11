@@ -1,0 +1,48 @@
+@startuml
+skinparam actorStyle awesome
+
+package "Steps to Debug a drupal issue" as pack {
+  usecase "Is the site reachable?" as rable
+  usecase "Watchdog" as watchdog
+  usecase "Drush WS" as drush_ws
+  usecase "Is the error discoverable (does it give you something to search for)?" as see_error
+  usecase "Is that error related to core, module, or theme?" as mt
+  usecase "Is there an upgrade to that core/module/theme?" as mt_up
+  usecase "Do any of the newer releases mention resolving a similar issue?" as mt_check
+  usecase "Are there any patches on d.o. related to the issue?" as patchcheck
+  usecase "apply upgrade" as upgrade
+  usecase "apply patch" as patch
+  usecase "Open ticket with Hosting Company" as hosting
+  usecase "Report Findings" as stop
+  usecase "check server logs" as log
+  usecase "check diskspace / ram usage" as checks
+
+}
+
+:user: --> rable
+rable --> watchdog : yes
+rable --> drush_ws : no
+
+drush_ws --> see_error
+watchdog --> see_error
+see_error --> hosting : no
+hosting --> log
+log --> checks
+checks --> stop
+see_error --> mt : yes
+' hosting -> :user: : Restart with new info
+mt --> mt_up : yes
+mt_up --> patchcheck : no
+mt_up --> mt_check : yes
+mt_check --> upgrade : yes
+mt_check --> stop : no
+patchcheck --> patch: yes
+patchcheck --> stop : no
+
+
+
+
+
+
+
+@enduml

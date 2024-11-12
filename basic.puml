@@ -1,10 +1,11 @@
 @startuml
 skinparam actorStyle awesome
 
-package "Steps to Debug a drupal issue" as pack {
+package "Steps to Debug a Drupal Issue" as pack {
+  usecase "Dev is assigned ticket" as user
   usecase "Is the site reachable?" as rable
   usecase "Watchdog" as watchdog
-  usecase "Drush WS" as drush_ws
+  usecase "Can you use Drush WS to see watchdog messages" as drush_ws
   usecase "Is the error discoverable (does it give you something to search for)?" as see_error
   usecase "Is that error related to core, module, or theme?" as mt
   usecase "Is there an upgrade to that core/module/theme?" as mt_up
@@ -19,11 +20,12 @@ package "Steps to Debug a drupal issue" as pack {
 
 }
 
-:user: --> rable
+user --> rable
 rable --> watchdog : yes
 rable --> drush_ws : no
 
-drush_ws --> see_error
+drush_ws --> see_error : yes
+drush_ws --> hosting : no
 watchdog --> see_error
 see_error --> hosting : no
 hosting --> log
